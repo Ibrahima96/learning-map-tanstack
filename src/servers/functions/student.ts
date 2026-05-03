@@ -15,3 +15,25 @@ export const studentServerFn = createServerFn({ method: "POST" })
 			id: student._id.toString(),
 		};
 	});
+export const getstudentServerFn = createServerFn({ method: "GET" }).handler(
+	async () => {
+		await connectDB();
+
+		const students = await Student.find().lean();
+
+		// Sérialiser les ObjectId et les dates en primitives simples
+		const serialized = students.map((s) => ({
+			_id: s._id.toString(),
+			name: s.name,
+			age: s.age,
+			classe: s.classe,
+			createdAt: s.createdAt ? new Date(s.createdAt).toISOString() : null,
+			updatedAt: s.updatedAt ? new Date(s.updatedAt).toISOString() : null,
+		}));
+
+		return {
+			success: true,
+			student: serialized,
+		};
+	},
+);
