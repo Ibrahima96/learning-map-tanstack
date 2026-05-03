@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as StudentRouteImport } from './routes/student'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as IdStudentIdRouteImport } from './routes/id/$studentId'
 import { Route as DemoTanstackQueryRouteImport } from './routes/demo/tanstack-query'
 import { Route as DemoStoreRouteImport } from './routes/demo/store'
 
@@ -22,6 +23,11 @@ const StudentRoute = StudentRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IdStudentIdRoute = IdStudentIdRouteImport.update({
+  id: '/id/$studentId',
+  path: '/id/$studentId',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DemoTanstackQueryRoute = DemoTanstackQueryRouteImport.update({
@@ -40,12 +46,14 @@ export interface FileRoutesByFullPath {
   '/student': typeof StudentRoute
   '/demo/store': typeof DemoStoreRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
+  '/id/$studentId': typeof IdStudentIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/student': typeof StudentRoute
   '/demo/store': typeof DemoStoreRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
+  '/id/$studentId': typeof IdStudentIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -53,13 +61,30 @@ export interface FileRoutesById {
   '/student': typeof StudentRoute
   '/demo/store': typeof DemoStoreRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
+  '/id/$studentId': typeof IdStudentIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/student' | '/demo/store' | '/demo/tanstack-query'
+  fullPaths:
+    | '/'
+    | '/student'
+    | '/demo/store'
+    | '/demo/tanstack-query'
+    | '/id/$studentId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/student' | '/demo/store' | '/demo/tanstack-query'
-  id: '__root__' | '/' | '/student' | '/demo/store' | '/demo/tanstack-query'
+  to:
+    | '/'
+    | '/student'
+    | '/demo/store'
+    | '/demo/tanstack-query'
+    | '/id/$studentId'
+  id:
+    | '__root__'
+    | '/'
+    | '/student'
+    | '/demo/store'
+    | '/demo/tanstack-query'
+    | '/id/$studentId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -67,6 +92,7 @@ export interface RootRouteChildren {
   StudentRoute: typeof StudentRoute
   DemoStoreRoute: typeof DemoStoreRoute
   DemoTanstackQueryRoute: typeof DemoTanstackQueryRoute
+  IdStudentIdRoute: typeof IdStudentIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -83,6 +109,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/id/$studentId': {
+      id: '/id/$studentId'
+      path: '/id/$studentId'
+      fullPath: '/id/$studentId'
+      preLoaderRoute: typeof IdStudentIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/demo/tanstack-query': {
@@ -107,6 +140,7 @@ const rootRouteChildren: RootRouteChildren = {
   StudentRoute: StudentRoute,
   DemoStoreRoute: DemoStoreRoute,
   DemoTanstackQueryRoute: DemoTanstackQueryRoute,
+  IdStudentIdRoute: IdStudentIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

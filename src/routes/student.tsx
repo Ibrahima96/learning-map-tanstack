@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { getstudentServerFn } from '../servers/functions/student'
+import StudentList from '#/components/StudentList'
 
 export const Route = createFileRoute('/student')({
   component: About,
@@ -24,16 +25,8 @@ function About() {
           {students.length === 0 ? (
             <p className="text-(--sea-ink-soft)">Aucun étudiant trouvé.</p>
           ) : (
-            students.map((student: any) => (
-              <div
-                key={student._id}
-                className="rounded-xl border border-(--sea-ink-soft) p-4 text-(--sea-ink)"
-              >
-                <p className="font-semibold">{student.name}</p>
-                <p className="text-sm text-(--sea-ink-soft)">
-                  Âge : {student.age} — Classe : {student.classe}
-                </p>
-              </div>
+            students.map((student: IStudent) => (
+             <StudentList key={student._id} {...student}/>
             ))
           )}
         </div>
