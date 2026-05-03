@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -27,7 +27,7 @@ function App() {
 	const createStudent = useServerFn(studentServerFn);
 	const [errorMessage, setErrorMessage] = useState("");
 	const [successMessage, setSuccessMessage] = useState("");
-
+	const router = useRouter()
 	const onsubmit = async (values: StudentFormValues) => {
 		setErrorMessage("");
 		setSuccessMessage("");
@@ -37,6 +37,7 @@ function App() {
 				data: values,
 			});
 
+			router.invalidate()
 			reset();
 			setSuccessMessage("Validation enregistrée en base.");
 			console.log(values);
@@ -74,7 +75,9 @@ function App() {
 						>
 							Action
 						</Button>
+
 					</CardFooter>
+					<Link className="ml-8" to="/student">Lire</Link>
 					{errorMessage ? (
 						<p className="px-6 pb-6 text-sm text-red-600">{errorMessage}</p>
 					) : null}

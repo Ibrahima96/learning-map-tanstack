@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 import { getstudentServerFn } from '../servers/functions/student'
 
 export const Route = createFileRoute('/student')({
@@ -9,13 +9,13 @@ export const Route = createFileRoute('/student')({
 })
 
 function About() {
-  const { student: students } = Route.useLoaderData()
-  // console.log(data)
-  // const students = data?.student ?? []
+  const { students } = Route.useLoaderData()
+ 
 
   return (
     <main className="page-wrap px-4 py-12">
       <section className="island-shell rounded-2xl p-6 sm:p-8">
+        <Link to="/" className="island-kicker mb-2">accueil</Link>
         <p className="island-kicker mb-2">student</p>
         <h1 className="display-title mb-3 text-4xl font-bold text-(--sea-ink) sm:text-5xl">
           A small starter with room to grow.
@@ -26,7 +26,7 @@ function About() {
           ) : (
             students.map((student: any) => (
               <div
-                key={student._id?.toString()}
+                key={student._id}
                 className="rounded-xl border border-(--sea-ink-soft) p-4 text-(--sea-ink)"
               >
                 <p className="font-semibold">{student.name}</p>
