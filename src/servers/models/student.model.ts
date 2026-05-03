@@ -31,7 +31,9 @@ const studentSchema = new Schema(
 	},
 );
 
-export type IStudent = InferSchemaType<typeof studentSchema>;
+export type IStudent = InferSchemaType<typeof studentSchema> & {
+	_id?: unknown;
+};
 
 const Student = models.Student ?? model<IStudent>("Student", studentSchema);
 

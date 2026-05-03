@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { Eye } from "lucide-react";
 import { useState } from "react";
@@ -65,9 +65,9 @@ function App() {
 				<Card className="mx-auto w-full max-w-xl">
 					<CardHeader>
 						<CardTitle>DB</CardTitle>
-						<Button type="button" className="w-fit" variant="link">
+						<Link to="/students/student">
 							<Eye size={29} />
-						</Button>
+						</Link>
 						<CardDescription>Mongodb - Learnity variant.</CardDescription>
 					</CardHeader>
 

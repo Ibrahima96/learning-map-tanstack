@@ -1,19 +1,16 @@
-// biome-ignore assist/source/organizeImports: <explanation>
+import { TanStackDevtools } from "@tanstack/react-devtools";
+import type { QueryClient } from "@tanstack/react-query";
 import {
+	createRootRouteWithContext,
+	type ErrorComponentProps,
 	HeadContent,
 	Scripts,
-	createRootRouteWithContext,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
-import { TanStackDevtools } from "@tanstack/react-devtools";
-
-import StoreDevtools from "../lib/demo-store-devtools";
 
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
-
+import StoreDevtools from "../lib/demo-store-devtools";
 import appCss from "../styles.css?url";
-
-import type { QueryClient } from "@tanstack/react-query";
 
 interface MyRouterContext {
 	queryClient: QueryClient;
@@ -42,14 +39,26 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 			},
 		],
 	}),
+	errorComponent: RootErrorComponent,
 	shellComponent: RootDocument,
 });
+
+function RootErrorComponent({ error }: ErrorComponentProps) {
+	return (
+		<div className="min-h-screen bg-neutral-950 p-8 text-white">
+			<h1 className="mb-2 text-2xl font-semibold">Une erreur est survenue</h1>
+			<p className="text-white/80">
+				{error instanceof Error ? error.message : String(error)}
+			</p>
+		</div>
+	);
+}
 
 function RootDocument({ children }: { children: React.ReactNode }) {
 	return (
 		<html lang="en" suppressHydrationWarning>
 			<head>
-				{/** biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation> */}
+				{/* biome-ignore lint/security/noDangerouslySetInnerHtml: theme init script must run before hydration */}
 				<script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
 				<HeadContent />
 			</head>

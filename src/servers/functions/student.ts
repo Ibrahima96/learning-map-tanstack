@@ -15,3 +15,11 @@ export const studentServerFn = createServerFn({ method: "POST" })
 			id: student._id.toString(),
 		};
 	});
+export const getStudentServerFn = createServerFn({ method: "GET" }).handler(
+	async () => {
+		await connectDB();
+
+		const student = await Student.find();
+		return student;
+	},
+);
