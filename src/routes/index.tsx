@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
+import { Eye } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { studentServerFn } from "#/servers/functions/student";
@@ -23,13 +24,19 @@ type StudentFormValues = {
 };
 
 function App() {
-	const { register, handleSubmit, reset } = useForm<StudentFormValues>();
+	const {
+		register,
+		handleSubmit,
+		reset,
+		setError,
+		clearErrors,
+		formState: { errors },
+	} = useForm<StudentFormValues>();
 	const createStudent = useServerFn(studentServerFn);
-	const [errorMessage, setErrorMessage] = useState("");
 	const [successMessage, setSuccessMessage] = useState("");
 
 	const onsubmit = async (values: StudentFormValues) => {
-		setErrorMessage("");
+		clearErrors("root");
 		setSuccessMessage("");
 
 		try {
@@ -38,31 +45,78 @@ function App() {
 			});
 
 			reset();
-			setSuccessMessage("Validation enregistrée en base.");
+			setSuccessMessage("Validation enregistree en base.");
 			console.log(values);
 		} catch (error) {
 			console.error("Erreur lors de l'enregistrement:", error);
-			setErrorMessage(
-				error instanceof Error
-					? error.message
-					: "Impossible d'enregistrer la validation.",
-			);
+			setError("root", {
+				type: "server",
+				message:
+					error instanceof Error
+						? error.message
+						: "Impossible d'enregistrer la validation.",
+			});
 		}
 	};
 
 	return (
-		<main className="h-screen justify-center items-center flex flex-col">
+		<main className="flex h-screen flex-col items-center justify-center">
 			<form onSubmit={handleSubmit(onsubmit)} className="w-full">
 				<Card className="mx-auto w-full max-w-xl">
 					<CardHeader>
 						<CardTitle>DB</CardTitle>
+						<Button type="button" className="w-fit" variant="link">
+							<Eye size={29} />
+						</Button>
 						<CardDescription>Mongodb - Learnity variant.</CardDescription>
 					</CardHeader>
 
-					<CardContent className="space-y-3">
-						<Input type="text" placeholder="name" {...register("name")} />
-						<Input type="number" placeholder="age" {...register("age")} />
-						<Input type="text" placeholder="classe" {...register("classe")} />
+					<CardContent className="space-y-4">
+						<div className="space-y-2">
+							<Input
+								type="text"
+								placeholder="name"
+								{...register("name", {
+									required: "Soumettre un nom",
+									minLength: {
+										value: 2,
+										message: "Le nom doit contenir au moins 2 caractères",
+									},
+								})}
+							/>
+							{errors.name?.message ? (
+								<p className="text-sm text-red-600">{errors.name.message}</p>
+							) : null}
+						</div>
+						<div className="space-y-2">
+							<Input
+								type="number"
+								placeholder="age"
+								{...register("age", {
+									valueAsNumber: true,
+									required: "Soumettre un âge",
+									min: {
+										value: 1,
+										message: "L'âge doit être supérieur ou égal à 1",
+									},
+								})}
+							/>
+							{errors.age?.message ? (
+								<p className="text-sm text-red-600">{errors.age.message}</p>
+							) : null}
+						</div>
+						<div className="space-y-2">
+							<Input
+								type="text"
+								placeholder="classe"
+								{...register("classe", {
+									required: "Soumettre une classe",
+								})}
+							/>
+							{errors.classe?.message ? (
+								<p className="text-sm text-red-600">{errors.classe.message}</p>
+							) : null}
+						</div>
 					</CardContent>
 
 					<CardFooter>
@@ -75,8 +129,10 @@ function App() {
 							Action
 						</Button>
 					</CardFooter>
-					{errorMessage ? (
-						<p className="px-6 pb-6 text-sm text-red-600">{errorMessage}</p>
+					{errors.root?.message ? (
+						<p className="px-6 pb-6 text-sm text-red-600">
+							{errors.root.message}
+						</p>
 					) : null}
 					{successMessage ? (
 						<p className="px-6 pb-6 text-sm text-green-600">{successMessage}</p>
