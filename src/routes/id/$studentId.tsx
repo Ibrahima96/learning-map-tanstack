@@ -3,6 +3,7 @@ import { deleteServerFn, getOneStudentServerFn } from '#/servers/functions/stude
 import { useServerFn } from '@tanstack/react-start'
 import { useState } from 'react'
 import { Button } from '#/components/ui/button'
+import { ArrowLeft, Edit, Trash2, Trash2Icon } from 'lucide-react'
 
 /**
  * 1. DÉFINITION DE LA ROUTE
@@ -70,15 +71,16 @@ function RouteComponent() {
 
   return (
     <main className="page-wrap px-4 py-12">
-      <section className="island-shell mx-auto max-w-2xl rounded-2xl p-6 sm:p-10">
+      <section className="island-shell mx-auto max-w-2xl rounded-2xl p-6 sm:p-10 rise-in">
 
         {/* En-tête avec navigation de retour */}
         <div className="mb-8 flex items-center justify-between">
           <Link
             to="/student"
-            className="text-sm font-medium text-(--sea-ink-soft) transition-colors hover:text-(--sea-ink)"
+            className="text-sm font-medium text-(--sea-ink-soft) transition-colors hover:text-(--sea-ink) flex items-center gap-2 group"
           >
-            ← Retour à la liste
+            <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
+            Retour à la liste
           </Link>
           <span className="island-kicker uppercase tracking-wider">Détails Étudiant</span>
         </div>
@@ -125,27 +127,26 @@ function RouteComponent() {
             </div>
           </div>
 
-          {/* Zone d'actions critiques */}
-          <div className="flex justify-between pt-4">
+          {/* Zone d'actions */}
+          <div className="flex flex-col sm:flex-row gap-4 pt-4">
+            <Link to='/$student/edit' params={{ student: studentId }} className="flex-1">
+              <Button
+                className='w-full h-12 cursor-pointer bg-(--lagoon-deep) hover:bg-(--palm) text-white font-bold rounded-xl flex items-center justify-center gap-2 transition-all active:scale-[0.98]'
+              >
+                <Edit className="w-4 h-4" />
+                Modifier
+              </Button>
+            </Link>
+
             <Button
               onClick={handleClick}
               disabled={isPending}
               variant="outline"
-              className="group border border-red-600 cursor-pointer relative flex items-center gap-2 overflow-hidden rounded-xl bg-red-50 px-6 py-3 font-semibold text-red-600 transition-all hover:bg-red-600 hover:text-white disabled:opacity-50"
+              className="flex-1 h-12 border-red-200 hover:border-red-500 bg-red-50/30 hover:bg-red-50 text-red-600 font-bold rounded-xl flex items-center justify-center gap-2 transition-all active:scale-[0.98] disabled:opacity-50"
             >
-              <span className="relative z-10">
-                {isPending ? 'Suppression en cours...' : 'Supprimer le profil'}
-              </span>
+              <Trash2Icon className="w-4 h-4" />
+              {isPending ? 'Suppression...' : 'Supprimer'}
             </Button>
-
-            <Link to='/$student/edit' params={{ student: studentId }}>
-              <Button
-              className='cursor-pointer'
-                variant="secondary"
-              >
-                Modifier
-              </Button>
-            </Link>
           </div>
         </div>
       </section>
