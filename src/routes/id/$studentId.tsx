@@ -71,7 +71,7 @@ function RouteComponent() {
   return (
     <main className="page-wrap px-4 py-12">
       <section className="island-shell mx-auto max-w-2xl rounded-2xl p-6 sm:p-10">
-        
+
         {/* En-tête avec navigation de retour */}
         <div className="mb-8 flex items-center justify-between">
           <Link
@@ -126,7 +126,7 @@ function RouteComponent() {
           </div>
 
           {/* Zone d'actions critiques */}
-          <div className="flex justify-end pt-4">
+          <div className="flex justify-between pt-4">
             <Button
               onClick={handleClick}
               disabled={isPending}
@@ -137,6 +137,15 @@ function RouteComponent() {
                 {isPending ? 'Suppression en cours...' : 'Supprimer le profil'}
               </span>
             </Button>
+
+            <Link to='/$student/edit' params={student._id}>
+              <Button
+              className='cursor-pointer'
+                variant="secondary"
+              >
+                Modifier
+              </Button>
+            </Link>
           </div>
         </div>
       </section>

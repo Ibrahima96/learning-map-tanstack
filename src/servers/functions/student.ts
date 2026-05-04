@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { studentSchema } from "#/lib/zod";
+import { studentSchema, updateStudentSchema } from "#/lib/zod";
 import { connectDB } from "../db/mongodb";
 import Student from "../models/student.model";
 
@@ -78,30 +78,66 @@ export const deleteServerFn = createServerFn({ method: "POST" })
  * 4. RÉCUPÉRATION D'UN SEUL ÉTUDIANT (GET)
  */
 export const getOneStudentServerFn = createServerFn({ method: "GET" })
-    .inputValidator(z.object({ id: z.string() }))
-    .handler(async ({ data }) => {
-        await connectDB();
+  .inputValidator(z.object({ id: z.string() }))
+  .handler(async ({ data }) => {
+    await connectDB();
 
-        const student = await Student.findById(data.id).lean();
+    const student = await Student.findById(data.id).lean();
 
-        if (!student) {
-            // Cette erreur pourra être attrapée côté client
-            throw new Error("Student not found");
-        }
+    if (!student) {
+      // Cette erreur pourra être attrapée côté client
+      throw new Error("Student not found");
+    }
 
-        // Sérialisation du document unique
-        const serialized = {
-            _id: student._id.toString(),
-            name: student.name,
-            age: student.age,
-            classe: student.classe,
-            createdAt: student.createdAt ? new Date(student.createdAt).toISOString() : null,
-            updatedAt: student.updatedAt ? new Date(student.updatedAt).toISOString() : null,
-        };
+    // Sérialisation du document unique
+    const serialized = {
+      _id: student._id.toString(),
+      name: student.name,
+      age: student.age,
+      classe: student.classe,
+      createdAt: student.createdAt
+        ? new Date(student.createdAt).toISOString()
+        : null,
+      updatedAt: student.updatedAt
+        ? new Date(student.updatedAt).toISOString()
+        : null,
+    };
 
-        return { student: serialized };
-    }); 
+    return { student: serialized };
+  });
 
+/**
+ * 5. MISE À JOUR D'UN ÉTUDIANT (POST)
+ * .inputValidator : Utilise updateStudentSchema pour valider l'ID et les champs à modifier.
+ */
+export const updateStudentServerFn = createServerFn({ method: "POST" })
+  .inputValidator(updateStudentSchema)
+  .handler(async ({ data }) => {
+    // Connexion à la base de données
+    await connectDB();
 
-    
+    const { id, name, age, classe } = data;
 
+    /**
+     * findByIdAndUpdate : Cherche le document par son ID et le met à jour.
+     * { new: true } : Indique à Mongoose de retourner l'objet mis à jour (au lieu de l'ancien).
+     * .lean() : Retourne un objet JavaScript simple.
+     */
+    const updated = await Student.findByIdAndUpdate(
+      id,
+      { name, age, classe },
+      { new: true },
+    ).lean();
+
+    if (!updated) {
+      throw new Error("Étudiant non trouvé");
+    }
+
+    return {
+      success: true,
+      student: {
+        ...updated,
+        _id: updated._id.toString(), // Sérialisation de l'ObjectId en String
+      },
+    };
+  });
