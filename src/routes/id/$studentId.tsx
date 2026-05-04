@@ -138,7 +138,7 @@ function RouteComponent() {
               </span>
             </Button>
 
-            <Link to='/$student/edit' params={student._id}>
+            <Link to='/$student/edit' params={{ student: studentId }}>
               <Button
               className='cursor-pointer'
                 variant="secondary"
