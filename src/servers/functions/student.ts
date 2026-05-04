@@ -101,3 +101,7 @@ export const getOneStudentServerFn = createServerFn({ method: "GET" })
 
         return { student: serialized };
     }); 
+
+
+
+    
