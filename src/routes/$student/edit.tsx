@@ -32,11 +32,11 @@ function RouteComponent() {
   // Récupération des données initiales chargées par le loader
   const { student } = Route.useLoaderData()
   const router = useRouter()
-  
+
   const navigate = useNavigate()
   // Utilisation de la fonction de modification côté serveur
   const updateStudent = useServerFn(updateStudentServerFn)
-  
+
   const [errorMessage, setErrorMessage] = useState("")
   const [successMessage, setSuccessMessage] = useState("")
 
@@ -60,7 +60,7 @@ function RouteComponent() {
           ...values,
         },
       })
-      navigate({ to: '/student' })
+      navigate({ to: '/student', replace: true })
       router.invalidate() // Invalide le cache pour re-déclencher le loader
       setSuccessMessage("Modifications enregistrées avec succès.")
     } catch (error) {
