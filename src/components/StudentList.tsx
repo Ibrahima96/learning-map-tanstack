@@ -13,7 +13,7 @@ const StudentList = ({ age, name, classe, _id }: IStudent) => {
          * params : Objet contenant les valeurs pour les segments dynamiques (ex: $studentId).
          * Ici, on passe l'ID de l'étudiant pour que l'URL devienne /id/12345.
          */
-        <Link to="/id/$studentId" params={{ studentId: _id! }}>
+        <Link to="/id/$studentId" params={{ studentId: _id }}>
             {/* Design System : bordures arrondies, padding et couleurs personnalisées */}
             <div className="rounded-xl border border-(--sea-ink-soft) p-4 text-(--sea-ink) transition-all hover:border-(--sea-ink) hover:bg-sea-foam/10">
                 <p className="font-semibold">{name}</p>

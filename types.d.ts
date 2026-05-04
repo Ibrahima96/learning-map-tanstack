@@ -4,7 +4,7 @@ interface IUser {
 }
 
 interface IStudent {
-  _id?: string;
+  _id: string;
   name: string;
   classe: string;
   age: number;
