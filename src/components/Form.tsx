@@ -201,7 +201,7 @@ const Form = () => {
 									disabled={isPending}
 									type="submit"
 									aria-busy={isPending}
-									className="h-12 w-full rounded-full bg-(--sea-ink) px-4 text-sm font-semibold text-white shadow-[0_16px_36px_rgba(23,58,64,0.18)] transition hover:-translate-y-0.5 hover:bg-(--lagoon-deep)"
+									className="h-12 w-full rounded-full bg-green-800 px-4 text-sm font-semibold text-white shadow-[0_16px_36px_rgba(23,58,64,0.18)] transition hover:-translate-y-0.5 hover:bg-green-950"
 								>
 									{isPending ? (
 										<>

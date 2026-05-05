@@ -1,6 +1,7 @@
 import { ArrowUpRight, GraduationCap, UserRound } from "lucide-react";
 
 import { Card } from "#/components/ui/card";
+import { Link } from "@tanstack/react-router";
 
 function getInitials(name: string) {
 	return name
@@ -55,17 +56,20 @@ const CardStudents = ({ name, age, classe, createdAt }: IStudentCard) => {
 						<GraduationCap className="size-4" />
 						Class
 					</div>
-					<p className="text-lg font-semibold text-[var(--sea-ink)]">
+					<p className="text-lg font-semibold text-(--sea-ink)">
 						{classe}
 					</p>
 				</div>
 			</div>
 
-			<div className="flex items-center justify-between gap-3 border-t border-[var(--line)] px-5 py-4 text-sm text-[var(--sea-ink-soft)] sm:px-6">
+			<div className="flex items-center justify-between gap-3 border-t border-(--line) px-5 py-4 text-sm text-(--sea-ink-soft) sm:px-6">
 				<span>Added {formatCreatedAt(createdAt)}</span>
-				<span className="inline-flex items-center gap-1 font-semibold text-[var(--sea-ink)]">
-					View
-					<ArrowUpRight className="size-4" />
+				<span className="inline-flex items-center gap-1 font-semibold text-(--sea-ink)">
+					<Link to="/">
+                    {/* link qui nous dirigera vers les details des students */}
+                        View
+                        <ArrowUpRight className="size-4" />
+                    </Link>
 				</span>
 			</div>
 		</Card>
