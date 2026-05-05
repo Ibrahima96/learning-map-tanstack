@@ -10,7 +10,7 @@ export const createStudentFn = createServerFn({ method: "POST" })
 
 		const student = await Student.create(data);
 		return {
-			student,
+			success: true,
 			id: student._id.toString(),
 		};
 	});
