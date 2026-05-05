@@ -1,8 +1,8 @@
-import { studentSchema } from "#/lib/zod";
+import { schemaId, studentSchema } from "#/lib/zod";
 import { createServerFn } from "@tanstack/react-start";
 import { connectDB } from "../db/mongodb";
 import Student from "../models/student.model";
-import z from "zod";
+
 
 export const createStudentFn = createServerFn({ method: "POST" })
 	.inputValidator(studentSchema)
@@ -31,14 +31,12 @@ export const getAllStudents = createServerFn({ method: "GET" }).handler(
 
 // /recuperation les details
 
-const schemaId = z.object({
-	id: z.string(),
-});
+
 export const getOneStudent = createServerFn({ method: "GET" })
 	.inputValidator(schemaId)
 	.handler(async ({ data }) => {
 		await connectDB();
-		const student = await Student.findById().lean();
+		const student = await Student.findById(data.id).lean();
 
 		return {
 			student: JSON.parse(JSON.stringify(student)),
