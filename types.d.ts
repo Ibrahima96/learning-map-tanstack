@@ -7,3 +7,11 @@ type StudentFormValues = {
 	age: number;
 	classe: string;
 };
+
+interface IStudentCard {
+	_id: string;
+	name: string;
+	age: number;
+	classe: string;
+	createdAt?: string;
+}
