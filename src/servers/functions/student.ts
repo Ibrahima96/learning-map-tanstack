@@ -3,6 +3,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { connectDB } from "../db/mongodb";
 import Student from "../models/student.model";
 
+
 export const createStudentFn = createServerFn({ method: "POST" })
 	.inputValidator(studentSchema)
 	.handler(async ({ data }) => {
@@ -14,3 +15,18 @@ export const createStudentFn = createServerFn({ method: "POST" })
 			id: student._id.toString(),
 		};
 	});
+
+//recuperation des enregistrer
+
+export const getAllStudents = createServerFn({ method: "GET" }).handler(
+	async () => {
+		await connectDB();
+		const students = await Student.find().sort({ createdAt: -1 }).lean();
+
+		
+		return {
+			students,
+			
+		};
+	},
+);
