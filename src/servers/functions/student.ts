@@ -1,17 +1,16 @@
-import { createServerFn } from "@tanstack/react-start";
 import { studentSchema } from "#/lib/zod";
+import { createServerFn } from "@tanstack/react-start";
 import { connectDB } from "../db/mongodb";
 import Student from "../models/student.model";
 
-export const studentServerFn = createServerFn({ method: "POST" })
+export const createStudentFn = createServerFn({ method: "POST" })
 	.inputValidator(studentSchema)
 	.handler(async ({ data }) => {
 		await connectDB();
 
-		const student = await Student.create(data);
-
+		const student = await Student.create({data});
 		return {
-			success: true,
-			id: student._id.toString(),
+			student,
+			_id: student._id.toString(),
 		};
 	});
