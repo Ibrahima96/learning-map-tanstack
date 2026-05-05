@@ -4,6 +4,8 @@ import { studentSchema, updateStudentSchema } from "#/lib/zod";
 import { connectDB } from "../db/mongodb";
 import Student from "../models/student.model";
 
+
+
 /**
  * 1. CRÉATION D'UN ÉTUDIANT (POST)
  * .inputValidator : Vérifie que les données reçues respectent le schéma Zod.
@@ -39,22 +41,9 @@ export const getstudentServerFn = createServerFn({ method: "GET" }).handler(
      */
     const students = await Student.find().sort({ createdAt: -1 }).lean();
 
-    /**
-     * SÉRIALISATION JSON
-     * MongoDB utilise des types spéciaux (ObjectId, Date).
-     * Pour les envoyer au navigateur via JSON, il faut les transformer en String/ISOString.
-     */
-    const serialized = students.map((s) => ({
-      _id: s._id.toString(),
-      name: s.name,
-      age: s.age,
-      classe: s.classe,
-      createdAt: s.createdAt ? new Date(s.createdAt).toISOString() : null,
-      updatedAt: s.updatedAt ? new Date(s.updatedAt).toISOString() : null,
-    }));
-
-    return {
-      students: serialized,
+    return { 
+      // Sérialisation automatique de l'ID et des Dates
+      students: JSON.parse(JSON.stringify(students)) 
     };
   },
 );
@@ -89,21 +78,7 @@ export const getOneStudentServerFn = createServerFn({ method: "GET" })
       throw new Error("Student not found");
     }
 
-    // Sérialisation du document unique
-    const serialized = {
-      _id: student._id.toString(),
-      name: student.name,
-      age: student.age,
-      classe: student.classe,
-      createdAt: student.createdAt
-        ? new Date(student.createdAt).toISOString()
-        : null,
-      updatedAt: student.updatedAt
-        ? new Date(student.updatedAt).toISOString()
-        : null,
-    };
-
-    return { student: serialized };
+    return { student: JSON.parse(JSON.stringify(student)) };
   });
 
 /**
@@ -135,10 +110,7 @@ export const updateStudentServerFn = createServerFn({ method: "POST" })
 
     return {
       success: true,
-      student: {
-        ...updated,
-        _id: updated._id.toString(), // Sérialisation de l'ObjectId en String
-      },
+      student: JSON.parse(JSON.stringify(updated)),
     };
   });
 

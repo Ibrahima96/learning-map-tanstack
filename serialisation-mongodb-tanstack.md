@@ -117,3 +117,18 @@ return { student: serialized }  // ✅ 100% JSON-safe
 > Cela exclut : `ObjectId`, `Buffer`, `Date` (parfois), `Map`, `Set`, les classes custom, les fonctions, les références circulaires.
 
 En résumé : **le serveur parle BSON, le client parle JSON** — tu es l'interprète entre les deux. 🌉
+
+
+
+```tsx
+const toStudentDTO = (s: any) => ({
+  id: s._id.toString(),
+  name: s.name,
+  age: s.age,
+  classe: s.classe,
+  createdAt: s.createdAt?.toISOString(),
+});
+
+// Dans votre handler :
+return { students: students.map(toStudentDTO) };
+`
