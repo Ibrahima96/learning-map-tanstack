@@ -5,3 +5,5 @@ export const studentSchema = z.object({
 	age: z.coerce.number().min(1),
 	classe: z.string(),
 });
+
+
