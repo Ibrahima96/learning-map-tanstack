@@ -24,16 +24,16 @@ function formatCreatedAt(createdAt?: string) {
 	}).format(new Date(createdAt));
 }
 
-const CardStudents = ({ name, age, classe, createdAt }: IStudentCard) => {
+const CardStudents = ({ name, age, classe, createdAt,_id }: IStudentCard) => {
 	const initials = getInitials(name);
 
 	return (
-		<Card className="group overflow-hidden rounded-3xl border-[var(--line)] bg-[var(--surface-strong)] p-0 shadow-[0_18px_36px_rgba(30,90,72,0.08)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_24px_48px_rgba(30,90,72,0.12)]">
-			<div className="border-b border-[var(--line)] p-5 sm:p-6">
+		<Card className="group overflow-hidden rounded-3xl border-(--line) bg-(--surface-strong) p-0 shadow-[0_18px_36px_rgba(30,90,72,0.08)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_24px_48px_rgba(30,90,72,0.12)]">
+			<div className="border-b border-(--line) p-5 sm:p-6">
 				<div className="flex items-start justify-between gap-4">
 					<div>
 						<p className="island-kicker">Student</p>
-						<h3 className="mt-2 text-xl font-semibold tracking-tight text-[var(--sea-ink)]">
+						<h3 className="mt-2 text-xl font-semibold tracking-tight text-(--sea-ink)">
 							{name}
 						</h3>
 					</div>
@@ -44,15 +44,15 @@ const CardStudents = ({ name, age, classe, createdAt }: IStudentCard) => {
 			</div>
 
 			<div className="grid gap-3 p-5 sm:grid-cols-2 sm:p-6">
-				<div className="rounded-2xl border border-[var(--line)] bg-[color-mix(in_oklab,var(--surface)_72%,white)] p-4">
-					<div className="mb-2 flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.2em] text-[var(--sea-ink-soft)]">
+				<div className="rounded-2xl border border-(--line) bg-[color-mix(in_oklab,var(--surface)_72%,white)] p-4">
+					<div className="mb-2 flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.2em] text-(--sea-ink-soft)">
 						<UserRound className="size-4" />
 						Age
 					</div>
-					<p className="text-2xl font-semibold text-[var(--sea-ink)]">{age}</p>
+					<p className="text-2xl font-semibold text-(--sea-ink)">{age}</p>
 				</div>
-				<div className="rounded-2xl border border-[var(--line)] bg-[color-mix(in_oklab,var(--surface)_72%,white)] p-4">
-					<div className="mb-2 flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.2em] text-[var(--sea-ink-soft)]">
+				<div className="rounded-2xl border border-(--line) bg-[color-mix(in_oklab,var(--surface)_72%,white)] p-4">
+					<div className="mb-2 flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.2em] text-(--sea-ink-soft)">
 						<GraduationCap className="size-4" />
 						Class
 					</div>
@@ -65,7 +65,7 @@ const CardStudents = ({ name, age, classe, createdAt }: IStudentCard) => {
 			<div className="flex items-center justify-between gap-3 border-t border-(--line) px-5 py-4 text-sm text-(--sea-ink-soft) sm:px-6">
 				<span>Added {formatCreatedAt(createdAt)}</span>
 				<span className="inline-flex items-center gap-1 font-semibold text-(--sea-ink)">
-					<Link to="/">
+					<Link to="/students/$id/details" params={{id:_id}}>
                     {/* link qui nous dirigera vers les details des students */}
                         View
                         <ArrowUpRight className="size-4" />
