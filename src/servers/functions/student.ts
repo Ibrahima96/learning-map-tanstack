@@ -8,9 +8,9 @@ export const createStudentFn = createServerFn({ method: "POST" })
 	.handler(async ({ data }) => {
 		await connectDB();
 
-		const student = await Student.create({data});
+		const student = await Student.create(data);
 		return {
 			student,
-			_id: student._id.toString(),
+			id: student._id.toString(),
 		};
 	});
