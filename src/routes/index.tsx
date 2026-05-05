@@ -38,22 +38,23 @@ function App() {
 
 					<div className="flex flex-wrap gap-3">
 						<Button
+						variant={"outline"}
 							asChild
-							className="h-12 rounded-full bg-[var(--sea-ink)] px-5 text-sm font-semibold text-white shadow-[0_14px_32px_rgba(23,58,64,0.18)] transition hover:bg-[var(--lagoon-deep)]"
+							className="h-12 rounded-full bg-(--sea-ink) px-5 text-sm font-semibold text-white shadow-[0_14px_32px_rgba(23,58,64,0.18)] transition hover:bg-(--lagoon-deep)"
 						>
 							<Link to="/students/form">
 								Add student
 								<ArrowRight className="size-4" />
 							</Link>
 						</Button>
-						<div className="inline-flex items-center gap-2 rounded-full border border-[var(--line)] bg-[var(--surface-strong)] px-4 py-2 text-sm text-[var(--sea-ink-soft)] shadow-[0_10px_24px_rgba(30,90,72,0.06)]">
+						<div className="inline-flex items-center gap-2 rounded-full border border-[var(--line)] bg-(--surface-strong) px-4 py-2 text-sm text-[var(--sea-ink-soft)] shadow-[0_10px_24px_rgba(30,90,72,0.06)]">
 							<Users className="size-4 text-[var(--lagoon-deep)]" />
 							{total} student{total === 1 ? "" : "s"}
 						</div>
 					</div>
 				</div>
 
-				<div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
+				<div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-2">
 					<div className="rounded-3xl border border-[var(--line)] bg-[var(--surface-strong)] p-5 shadow-[0_12px_28px_rgba(30,90,72,0.08)]">
 						<p className="island-kicker">Total</p>
 						<p className="mt-3 text-3xl font-semibold text-[var(--sea-ink)]">
