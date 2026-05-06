@@ -62,7 +62,7 @@ function RouteComponent() {
             </CardDescription>
           </CardHeader>
           <CardFooter className="flex justify-center pb-8">
-            <Button asChild variant="default" className="min-w-[200px]">
+            <Button asChild variant="default" className="min-w-50">
               <Link to="/">Retour à l'accueil</Link>
             </Button>
           </CardFooter>
@@ -104,7 +104,7 @@ function RouteComponent() {
 
       <div className="space-y-8">
         <div className="space-y-2">
-          <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight bg-gradient-to-br from-foreground to-muted-foreground bg-clip-text text-transparent">
+          <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight bg-linear-to-br from-foreground to-muted-foreground bg-clip-text text-transparent">
             Détails de l'étudiant
           </h1>
           <p className="text-muted-foreground text-lg">
@@ -113,8 +113,8 @@ function RouteComponent() {
         </div>
 
         <Card className="overflow-hidden border-border/40 shadow-xl bg-card/50 backdrop-blur-sm">
-          <div className="h-32 bg-gradient-to-r from-primary/20 via-primary/10 to-background border-b border-border/40 relative">
-            <div className="absolute inset-0 bg-grid-white/10 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0))]" />
+          <div className="h-32 bg-linear-to-r from-primary/20 via-primary/10 to-background border-b border-border/40 relative">
+            <div className="absolute inset-0 bg-grid-white/10 mask-[linear-gradient(0deg,white,rgba(255,255,255,0))]" />
           </div>
 
           <CardHeader className="relative px-6 sm:px-8 pb-0 -mt-16">
