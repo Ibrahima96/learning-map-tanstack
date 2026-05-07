@@ -2,7 +2,7 @@ import CardStudents from "#/components/CardStudents";
 import { Button } from "#/components/ui/button";
 import { getAllStudents } from "#/servers/functions/student";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, Sparkles, Users } from "lucide-react";
+import { ArrowRight, Plus, Users } from "lucide-react";
 
 export const Route = createFileRoute("/")({
 	component: App,
@@ -17,116 +17,97 @@ function App() {
 	const latestStudent = students[0];
 
 	return (
-		<main className="page-wrap px-4 py-10 sm:py-12 lg:py-14">
-			<section className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
-				<div className="space-y-5">
-					<div className="inline-flex items-center gap-2 rounded-full border border-[var(--chip-line)] bg-[var(--chip-bg)] px-4 py-2 text-[11px] font-bold uppercase tracking-[0.22em] text-[var(--kicker)] shadow-[0_10px_28px_rgba(30,90,72,0.08)]">
-						<Sparkles className="size-4" />
-						Student overview
+		<main className="page-wrap py-12 md:py-20">
+			<section className="mb-16 grid items-center gap-12 lg:grid-cols-2">
+				<div className="space-y-6">
+					<div className="inline-flex items-center gap-2 rounded-full bg-accent-soft px-3 py-1 text-xs font-semibold text-accent">
+						<Users className="size-3.5" />
+						Database Status: Active
 					</div>
 
 					<div className="space-y-4">
-						<p className="island-kicker">Class records</p>
-						<h1 className="display-title max-w-2xl text-4xl font-bold leading-[0.95] tracking-tight text-[var(--sea-ink)] sm:text-5xl lg:text-6xl">
-							Students at a glance.
+						<h1 className="display-title text-5xl font-medium tracking-tight text-foreground md:text-7xl">
+							Student Management <br />
+							<span className="text-accent">Made Simple.</span>
 						</h1>
-						<p className="max-w-2xl text-base leading-8 text-[var(--sea-ink-soft)] sm:text-lg">
-							A calm dashboard for browsing student records and jumping directly
-							into the add form.
+						<p className="max-w-lg text-lg leading-relaxed text-muted-foreground">
+							A clean and efficient way to manage your student records. 
+							Monitor performance, track attendance, and organize class lists in one place.
 						</p>
 					</div>
 
-					<div className="flex flex-wrap gap-3">
+					<div className="flex flex-wrap gap-4">
 						<Button
-						variant={"outline"}
 							asChild
-							className="h-12 rounded-full bg-(--sea-ink) px-5 text-sm font-semibold text-white shadow-[0_14px_32px_rgba(23,58,64,0.18)] transition hover:bg-(--lagoon-deep)"
+							className="h-12 rounded-full bg-primary px-6 text-sm font-medium text-primary-foreground transition-all hover:opacity-90 shadow-lg"
 						>
 							<Link to="/students/form">
-								Add student
-								<ArrowRight className="size-4" />
+								<Plus className="mr-2 size-4" />
+								Add New Student
 							</Link>
 						</Button>
-						<div className="inline-flex items-center gap-2 rounded-full border border-[var(--line)] bg-(--surface-strong) px-4 py-2 text-sm text-[var(--sea-ink-soft)] shadow-[0_10px_24px_rgba(30,90,72,0.06)]">
-							<Users className="size-4 text-[var(--lagoon-deep)]" />
-							{total} student{total === 1 ? "" : "s"}
+						<div className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-foreground">
+							<div className="flex -space-x-2">
+								{[1, 2, 3].map((i) => (
+									<div key={i} className="h-8 w-8 rounded-full border-2 border-background bg-muted flex items-center justify-center text-[10px]">
+										{i}
+									</div>
+								))}
+							</div>
+							<span className="ml-2">{total} records stored</span>
 						</div>
 					</div>
 				</div>
 
-				<div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-2">
-					<div className="rounded-3xl border border-[var(--line)] bg-[var(--surface-strong)] p-5 shadow-[0_12px_28px_rgba(30,90,72,0.08)]">
-						<p className="island-kicker">Total</p>
-						<p className="mt-3 text-3xl font-semibold text-[var(--sea-ink)]">
-							{total}
-						</p>
-						<p className="mt-2 text-sm leading-6 text-[var(--sea-ink-soft)]">
-							Records currently stored in the list.
-						</p>
-					</div>
-					<div className="rounded-3xl border border-[var(--line)] bg-[var(--surface-strong)] p-5 shadow-[0_12px_28px_rgba(30,90,72,0.08)]">
-						<p className="island-kicker">Latest</p>
-						<p className="mt-3 text-xl font-semibold text-[var(--sea-ink)]">
-							{latestStudent?.name ?? "No student yet"}
-						</p>
-						<p className="mt-2 text-sm leading-6 text-[var(--sea-ink-soft)]">
-							{latestStudent
-								? `Class ${latestStudent.classe} - Age ${latestStudent.age}`
-								: "Create the first entry to start building the list."}
-						</p>
-					</div>
-					<div className="rounded-3xl border border-[var(--line)] bg-[var(--surface-strong)] p-5 shadow-[0_12px_28px_rgba(30,90,72,0.08)]">
-						<p className="island-kicker">Display</p>
-						<p className="mt-3 text-xl font-semibold text-[var(--sea-ink)]">
-							Clean cards
-						</p>
-						<p className="mt-2 text-sm leading-6 text-[var(--sea-ink-soft)]">
-							Responsive cards keep the hierarchy readable on mobile and
-							desktop.
-						</p>
+				<div className="relative">
+					<div className="absolute -inset-4 rounded-[2rem] bg-gradient-to-tr from-accent/10 to-transparent blur-2xl" />
+					<div className="relative grid gap-4 sm:grid-cols-2">
+						<div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
+							<p className="text-xs font-bold uppercase tracking-wider text-accent">System Total</p>
+							<p className="mt-2 text-4xl font-medium text-foreground">{total}</p>
+							<p className="mt-2 text-sm text-muted-foreground">Registered students</p>
+						</div>
+						<div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
+							<p className="text-xs font-bold uppercase tracking-wider text-accent">Latest Entry</p>
+							<p className="mt-2 text-xl font-medium text-foreground truncate">
+								{latestStudent?.name ?? "N/A"}
+							</p>
+							<p className="mt-2 text-sm text-muted-foreground">
+								{latestStudent ? `Class ${latestStudent.classe}` : "Waiting for data"}
+							</p>
+						</div>
 					</div>
 				</div>
 			</section>
 
-			<section className="mt-10">
-				<div className="mb-4 flex items-end justify-between gap-4">
+			<section className="rise-in">
+				<div className="mb-8 flex items-end justify-between gap-4 border-b border-border pb-6">
 					<div>
-						<h2 className="text-xl font-semibold text-[var(--sea-ink)]">
-							Student list
-						</h2>
-						<p className="mt-1 text-sm text-[var(--sea-ink-soft)]">
-							Latest entries appear first.
+						<h2 className="text-2xl font-medium text-foreground">Student Registry</h2>
+						<p className="mt-1 text-sm text-muted-foreground">
+							Showing all {total} records in the system.
 						</p>
 					</div>
-					<p className="hidden text-sm text-[var(--sea-ink-soft)] sm:block">
-						{total} record{total === 1 ? "" : "s"}
-					</p>
 				</div>
 
 				{students.length ? (
-					<div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+					<div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
 						{students.map((student) => (
 							<CardStudents key={student._id} {...student} />
 						))}
 					</div>
 				) : (
-					<div className="island-shell rounded-3xl p-8 text-center sm:p-10">
-						<p className="island-kicker">No data yet</p>
-						<h3 className="display-title mt-3 text-3xl font-bold text-[var(--sea-ink)]">
-							Add the first student record.
-						</h3>
-						<p className="mx-auto mt-3 max-w-xl text-base leading-8 text-[var(--sea-ink-soft)]">
-							Use the form to create a clean list entry and see the new card
-							layout in action.
-						</p>
+					<div className="rounded-3xl border-2 border-dashed border-border p-12 text-center">
+						<div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-muted">
+							<Users className="size-6 text-muted-foreground" />
+						</div>
+						<h3 className="mt-4 text-lg font-medium text-foreground">No students found</h3>
+						<p className="mt-2 text-muted-foreground">Get started by adding your first student record.</p>
 						<Button
 							asChild
-							className="mt-6 h-12 rounded-full bg-[var(--sea-ink)] px-5 text-sm font-semibold text-white shadow-[0_14px_32px_rgba(23,58,64,0.18)] transition hover:bg-[var(--lagoon-deep)]"
+							className="mt-6 h-10 rounded-full bg-primary px-5 text-sm font-medium"
 						>
-							<Link to="/students/form">
-								Add student
-								<ArrowRight className="size-4" />
-							</Link>
+							<Link to="/students/form">Add Student</Link>
 						</Button>
 					</div>
 				)}

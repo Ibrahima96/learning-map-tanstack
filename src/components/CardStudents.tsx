@@ -1,6 +1,4 @@
-import { ArrowUpRight, GraduationCap, UserRound } from "lucide-react";
-
-import { Card } from "#/components/ui/card";
+import { ArrowRight, GraduationCap, UserRound } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 
 function getInitials(name: string) {
@@ -13,66 +11,69 @@ function getInitials(name: string) {
 }
 
 function formatCreatedAt(createdAt?: string) {
-	if (!createdAt) {
-		return "Recent entry";
-	}
-
+	if (!createdAt) return "Recent";
 	return new Intl.DateTimeFormat("en-US", {
 		month: "short",
 		day: "numeric",
-		year: "numeric",
 	}).format(new Date(createdAt));
 }
 
-const CardStudents = ({ name, age, classe, createdAt,_id }: IStudentCard) => {
+const CardStudents = ({ name, age, classe, createdAt, _id }: IStudentCard) => {
 	const initials = getInitials(name);
 
 	return (
-		<Card className="group overflow-hidden rounded-3xl border-(--line) bg-(--surface-strong) p-0 shadow-[0_18px_36px_rgba(30,90,72,0.08)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_24px_48px_rgba(30,90,72,0.12)]">
-			<div className="border-b border-(--line) p-5 sm:p-6">
-				<div className="flex items-start justify-between gap-4">
-					<div>
-						<p className="island-kicker">Student</p>
-						<h3 className="mt-2 text-xl font-semibold tracking-tight text-(--sea-ink)">
-							{name}
-						</h3>
+		<Link 
+			to="/students/$id/details" 
+			params={{ id: _id }}
+			className="group block"
+		>
+			<div className="relative overflow-hidden rounded-2xl border border-border bg-card p-6 transition-all duration-300 hover:border-accent hover:shadow-xl hover:shadow-accent/5">
+				<div className="flex items-start justify-between">
+					<div className="flex items-center gap-4">
+						<div className="flex h-12 w-12 items-center justify-center rounded-xl bg-muted text-foreground font-bold transition-colors group-hover:bg-accent group-hover:text-white">
+							{initials}
+						</div>
+						<div>
+							<h3 className="text-lg font-semibold text-foreground group-hover:text-accent transition-colors">
+								{name}
+							</h3>
+							<p className="text-sm text-muted-foreground">Student Profile</p>
+						</div>
 					</div>
-					<div className="flex size-12 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,var(--sea-ink),var(--lagoon-deep))] text-sm font-bold text-white shadow-[0_12px_24px_rgba(23,58,64,0.18)]">
-						{initials}
+					<div className="rounded-full bg-muted p-1.5 opacity-0 transition-all group-hover:opacity-100 group-hover:translate-x-1">
+						<ArrowRight className="size-4 text-accent" />
 					</div>
 				</div>
-			</div>
 
-			<div className="grid gap-3 p-5 sm:grid-cols-2 sm:p-6">
-				<div className="rounded-2xl border border-(--line) bg-[color-mix(in_oklab,var(--surface)_72%,white)] p-4">
-					<div className="mb-2 flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.2em] text-(--sea-ink-soft)">
-						<UserRound className="size-4" />
-						Age
+				<div className="mt-8 grid grid-cols-2 gap-4">
+					<div className="flex items-center gap-2">
+						<div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent-soft">
+							<GraduationCap className="size-4 text-accent" />
+						</div>
+						<div>
+							<p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Class</p>
+							<p className="text-sm font-medium text-foreground">{classe}</p>
+						</div>
 					</div>
-					<p className="text-2xl font-semibold text-(--sea-ink)">{age}</p>
-				</div>
-				<div className="rounded-2xl border border-(--line) bg-[color-mix(in_oklab,var(--surface)_72%,white)] p-4">
-					<div className="mb-2 flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.2em] text-(--sea-ink-soft)">
-						<GraduationCap className="size-4" />
-						Class
+					<div className="flex items-center gap-2">
+						<div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent-soft">
+							<UserRound className="size-4 text-accent" />
+						</div>
+						<div>
+							<p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Age</p>
+							<p className="text-sm font-medium text-foreground">{age} yrs</p>
+						</div>
 					</div>
-					<p className="text-lg font-semibold text-(--sea-ink)">
-						{classe}
-					</p>
 				</div>
-			</div>
 
-			<div className="flex items-center justify-between gap-3 border-t border-(--line) px-5 py-4 text-sm text-(--sea-ink-soft) sm:px-6">
-				<span>Added {formatCreatedAt(createdAt)}</span>
-				<span className="inline-flex items-center gap-1 font-semibold text-(--sea-ink)">
-					<Link to="/students/$id/details" params={{id:_id}}>
-                    {/* link qui nous dirigera vers les details des students */}
-                        View
-                        <ArrowUpRight className="size-4" />
-                    </Link>
-				</span>
+				<div className="mt-6 flex items-center justify-between border-t border-border pt-4">
+					<span className="text-[11px] text-muted-foreground uppercase tracking-widest">
+						Joined {formatCreatedAt(createdAt)}
+					</span>
+					<div className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse" />
+				</div>
 			</div>
-		</Card>
+		</Link>
 	);
 };
 

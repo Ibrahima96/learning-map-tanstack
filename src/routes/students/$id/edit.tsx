@@ -1,6 +1,5 @@
 import {
   createFileRoute,
-  useLoaderData,
   useNavigate,
   useRouter,
 } from "@tanstack/react-router";
@@ -17,11 +16,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
-import { ArrowLeft, ArrowRight, Loader2, ShieldCheck } from "lucide-react";
+import { ArrowLeft, ArrowRight, Loader2, Save, UserCog } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { getOneStudent, updatedStudent } from "#/servers/functions/student";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
+
 export const Route = createFileRoute("/students/$id/edit")({
   component: RouteComponent,
   loader: async ({ params }) => {
@@ -35,7 +35,6 @@ function RouteComponent() {
   const {
     register,
     handleSubmit,
-
     formState: { errors },
   } = useForm<StudentFormValues>({
     defaultValues: {
@@ -44,148 +43,143 @@ function RouteComponent() {
       classe: student.classe,
     },
   });
+  
   const [isPending, setIsPending] = useState(false);
-  console.log(student);
   const navigate = useNavigate();
-  const route = useRouter();
-  //edit function
-  const edit = useServerFn(updatedStudent);
+  const router = useRouter();
+  const editStudent = useServerFn(updatedStudent);
+
   const onSubmit = async (data: StudentFormValues) => {
     setIsPending(true);
     try {
-      await edit({ data: { id, ...data } });
-      toast.success("sucesse ...");
-      route.invalidate();
-      navigate({ to: "/" });
-      throw new Error("updated failed");
+      await editStudent({ data: { id, ...data } });
+      toast.success("Profile updated successfully.");
+      router.invalidate();
+      navigate({ to: "/students/$id/details", params: { id } });
     } catch (error) {
-      console.log(error);
+      toast.error("Failed to update profile.");
+      console.error(error);
     } finally {
-      setIsPending(true);
+      setIsPending(false);
     }
   };
+
   return (
-    <div className="max-w-6xl mx-auto px-8 pt-8 pb-16">
-      <div className="pt-3 pb-8">
-        <Link
-          to="/students/$id/details"
-          params={{ id }}
-          className="flex gap-3 items-center"
+    <main className="page-wrap py-12 md:py-20 rise-in">
+      <div className="mb-12">
+        <Button
+          asChild
+          variant="ghost"
+          className="group -ml-4 h-10 gap-2 rounded-full text-muted-foreground hover:text-foreground"
         >
-          <ArrowLeft className="h-4 w-4" />
-          Retour au details
-        </Link>
+          <Link to="/students/$id/details" params={{ id }}>
+            <ArrowLeft className="size-4 transition-transform group-hover:-translate-x-1" />
+            Back to Details
+          </Link>
+        </Button>
       </div>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="overflow-hidden rounded-[1.75rem]"
-      >
-        <Card className="island-shell overflow-hidden rounded-[1.75rem] border-(--line) bg-(--surface-strong) p-0">
-          <CardHeader className="border-b border-(--line) px-6 pb-5 pt-6 sm:px-8">
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <p className="island-kicker">Edited</p>
-                <CardTitle className="mt-2 text-2xl font-bold tracking-tight text-(--sea-ink)">
-                  Student Edited
-                </CardTitle>
-              </div>
-              <div className="inline-flex items-center gap-2 rounded-full border border-(--chip-line) bg-(--chip-bg) px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-(--kicker)">
-                <ShieldCheck className="size-4" />
-                Secure
-              </div>
-            </div>
-            <CardDescription className="mt-3 max-w-lg text-sm leading-7 text-(--sea-ink-soft)">
-              Keep the form short and focused. The new card layout keeps the
-              fields easy to scan and the action easy to find.
-            </CardDescription>
-          </CardHeader>
 
-          <CardContent className="space-y-5 px-6 py-6 sm:px-8">
-            <div className="space-y-2">
-              <Label className="text-[10px] font-bold uppercase tracking-[0.24em] text-(--kicker)">
-                Student name
-              </Label>
-              <Input
-                type="text"
-                placeholder="Full name"
-                autoComplete="name"
-                {...register("name", {
-                  required: "Please enter a name.",
-                })}
-                className="h-12 rounded-xl border border-(--line) bg-white/80 px-4 text-(--sea-ink) shadow-[inset_0_1px_0_rgba(255,255,255,0.85)] placeholder:text-(--sea-ink-soft)/60 focus-visible:border-(--lagoon-deep) focus-visible:ring-2 focus-visible:ring-(--lagoon)/30"
-              />
-              {errors.name && (
-                <span className="text-sm text-red-600">
-                  {errors.name.message}
-                </span>
-              )}
-            </div>
+      <div className="grid gap-16 lg:grid-cols-2">
+        <div className="space-y-8">
+          <div className="space-y-4">
+            <h1 className="display-title text-5xl md:text-6xl font-medium tracking-tight">
+              Edit <br />
+              <span className="text-accent italic">{student.name}</span>
+            </h1>
+            <p className="max-w-md text-lg text-muted-foreground leading-relaxed">
+              Updating student records helps maintain an accurate registry. 
+              Changes are reflected across the system immediately.
+            </p>
+          </div>
 
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div className="space-y-2">
-                <Label className="text-[10px] font-bold uppercase tracking-[0.24em] text-(--kicker)">
-                  Age
-                </Label>
-                <Input
-                  type="number"
-                  placeholder="18"
-                  inputMode="numeric"
-                  {...register("age", {
-                    valueAsNumber: true,
-                    required: "Please enter an age.",
-                  })}
-                  className="h-12 rounded-xl border border-(--line) bg-white/80 px-4 text-(--sea-ink) shadow-[inset_0_1px_0_rgba(255,255,255,0.85)] placeholder:text-(--sea-ink-soft)/60 focus-visible:border-(--lagoon-deep) focus-visible:ring-2 focus-visible:ring-(--lagoon)/30"
-                />
-                {errors.age && (
-                  <span className="text-sm text-red-600">
-                    {errors.age.message}
-                  </span>
-                )}
-              </div>
-              <div className="space-y-2">
-                <Label className="text-[10px] font-bold uppercase tracking-[0.24em] text-(--kicker)">
-                  Class
-                </Label>
-                <Input
-                  type="text"
-                  placeholder="Grade A"
-                  autoComplete="off"
-                  {...register("classe", {
-                    required: "Please enter a class.",
-                  })}
-                  className="h-12 rounded-xl border border-(--line) bg-white/80 px-4 text-(--sea-ink) shadow-[inset_0_1px_0_rgba(255,255,255,0.85)] placeholder:text-(--sea-ink-soft)/60 focus-visible:border-(--lagoon-deep) focus-visible:ring-2 focus-visible:ring-(--lagoon)/30"
-                />
-                {errors.classe && (
-                  <span className="text-sm text-red-600">
-                    {errors.classe.message}
-                  </span>
-                )}
-              </div>
+          <div className="rounded-2xl border border-border bg-muted/30 p-6 flex items-start gap-4">
+            <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-card border border-border shadow-sm">
+              <UserCog className="size-5 text-accent" />
             </div>
-          </CardContent>
+            <div>
+              <p className="font-semibold text-sm">Active Profile</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                You are currently editing a verified record. 
+                Ensure all details are correct before saving.
+              </p>
+            </div>
+          </div>
+        </div>
 
-          <CardFooter className="border-t border-(--line) px-6 pb-6 pt-6 sm:px-8">
-            <Button
-              disabled={isPending}
-              type="submit"
-              aria-busy={isPending}
-              className="h-12 w-full rounded-full bg-green-800 px-4 text-sm font-semibold text-white shadow-[0_16px_36px_rgba(23,58,64,0.18)] transition hover:-translate-y-0.5 hover:bg-green-950"
-            >
-              {isPending ? (
-                <>
-                  <Loader2 className="size-4 animate-spin" />
-                  chargement...
-                </>
-              ) : (
-                <>
-                  Modifier
-                  <ArrowRight className="size-4" />
-                </>
-              )}
-            </Button>
-          </CardFooter>
-        </Card>
-      </form>
-    </div>
+        <div>
+          <Card className="rounded-3xl border-border shadow-2xl shadow-accent/5 overflow-hidden">
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <CardHeader className="bg-muted/30 px-8 py-8 border-b border-border">
+                <CardTitle className="text-2xl">Modify Details</CardTitle>
+                <CardDescription>Adjust the student's information below.</CardDescription>
+              </CardHeader>
+
+              <CardContent className="p-8 space-y-6">
+                <div className="space-y-2">
+                  <Label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                    Full Name
+                  </Label>
+                  <Input
+                    type="text"
+                    {...register("name", { required: "Name is required" })}
+                    className="h-12 rounded-xl border-border bg-background px-4 focus:ring-accent/20"
+                  />
+                  {errors.name && <p className="text-xs text-destructive mt-1">{errors.name.message}</p>}
+                </div>
+
+                <div className="grid gap-6 sm:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                      Age
+                    </Label>
+                    <Input
+                      type="number"
+                      {...register("age", { 
+                        valueAsNumber: true, 
+                        required: "Age is required" 
+                      })}
+                      className="h-12 rounded-xl border-border bg-background px-4 focus:ring-accent/20"
+                    />
+                    {errors.age && <p className="text-xs text-destructive mt-1">{errors.age.message}</p>}
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                      Class Level
+                    </Label>
+                    <Input
+                      type="text"
+                      {...register("classe", { required: "Class is required" })}
+                      className="h-12 rounded-xl border-border bg-background px-4 focus:ring-accent/20"
+                    />
+                    {errors.classe && <p className="text-xs text-destructive mt-1">{errors.classe.message}</p>}
+                  </div>
+                </div>
+              </CardContent>
+
+              <CardFooter className="p-8 pt-0">
+                <Button
+                  disabled={isPending}
+                  type="submit"
+                  className="h-12 w-full rounded-2xl bg-primary text-primary-foreground font-semibold shadow-lg hover:opacity-90"
+                >
+                  {isPending ? (
+                    <>
+                      <Loader2 className="mr-2 size-4 animate-spin" />
+                      Saving changes...
+                    </>
+                  ) : (
+                    <>
+                      <Save className="mr-2 size-4" />
+                      Save Changes
+                      <ArrowRight className="ml-2 size-4" />
+                    </>
+                  )}
+                </Button>
+              </CardFooter>
+            </form>
+          </Card>
+        </div>
+      </div>
+    </main>
   );
 }

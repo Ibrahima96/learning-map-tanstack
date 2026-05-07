@@ -3,7 +3,7 @@ import {
 	ArrowLeft,
 	ArrowRight,
 	Loader2,
-	ShieldCheck,
+	PlusCircle,
 	Sparkles,
 } from "lucide-react";
 import { useState } from "react";
@@ -39,7 +39,7 @@ const Form = () => {
 		try {
 			await createStudent({ data });
 			reset();
-			toast("Student created successfully.");
+			toast.success("Student created successfully.");
 		} catch (error) {
 			toast.error("Unable to create the student.");
 			console.error(error);
@@ -49,176 +49,130 @@ const Form = () => {
 	};
 
 	return (
-		<main className="page-wrap px-4 py-10 sm:py-12 lg:py-14">
-			<div className="grid gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-start">
-				<section className="space-y-5 pt-2">
-					<Link
-						to="/"
-						className="inline-flex items-center gap-2 rounded-full border border-[var(--chip-line)] bg-[var(--chip-bg)] px-4 py-2 text-sm font-semibold text-[var(--sea-ink)] no-underline shadow-[0_10px_24px_rgba(30,90,72,0.06)] transition hover:-translate-y-0.5"
-					>
-						<ArrowLeft className="size-4" />
-						Back to list
+		<main className="page-wrap py-12 md:py-20 rise-in">
+			<div className="mb-12">
+				<Button
+					asChild
+					variant="ghost"
+					className="group -ml-4 h-10 gap-2 rounded-full text-muted-foreground hover:text-foreground"
+				>
+					<Link to="/">
+						<ArrowLeft className="size-4 transition-transform group-hover:-translate-x-1" />
+						Back to Registry
 					</Link>
+				</Button>
+			</div>
 
+			<div className="grid gap-16 lg:grid-cols-2">
+				<div className="space-y-8">
 					<div className="space-y-4">
-						<p className="island-kicker">Student intake</p>
-						<h1 className="display-title max-w-xl text-4xl font-bold leading-[0.95] tracking-tight text-[var(--sea-ink)] sm:text-5xl lg:text-6xl">
-							Add a student record.
+						<h1 className="display-title text-5xl md:text-6xl font-medium tracking-tight">
+							Expand your <br />
+							<span className="text-accent italic">class directory.</span>
 						</h1>
-						<p className="max-w-xl text-base leading-8 text-[var(--sea-ink-soft)] sm:text-lg">
-							Use this compact form to capture a name, an age, and a class in
-							one pass. The layout stays readable on smaller screens and calm on
-							larger ones.
+						<p className="max-w-md text-lg text-muted-foreground leading-relaxed">
+							Fill in the details to register a new student. Our system ensures data 
+							integrity and provides an instant preview in the registry.
 						</p>
 					</div>
 
-					<div className="rounded-3xl border border-[var(--line)] bg-[var(--surface-strong)] p-5 shadow-[0_12px_28px_rgba(30,90,72,0.08)]">
-						<div className="flex items-center gap-3">
-							<div className="flex size-12 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,var(--sea-ink),var(--lagoon-deep))] text-white shadow-[0_12px_24px_rgba(23,58,64,0.18)]">
+					<div className="space-y-6">
+						<div className="flex gap-4">
+							<div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-accent-soft text-accent">
+								<PlusCircle className="size-5" />
+							</div>
+							<div>
+								<p className="font-semibold">Quick Addition</p>
+								<p className="text-sm text-muted-foreground">Minimal required fields for fast intake.</p>
+							</div>
+						</div>
+						<div className="flex gap-4">
+							<div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-accent-soft text-accent">
 								<Sparkles className="size-5" />
 							</div>
 							<div>
-								<p className="text-sm font-semibold text-[var(--sea-ink)]">
-									Clear input flow
-								</p>
-								<p className="text-sm text-[var(--sea-ink-soft)]">
-									Short fields, visible feedback, and a simple submit action.
-								</p>
-							</div>
-						</div>
-						<div className="mt-4 grid gap-3 sm:grid-cols-2">
-							<div className="rounded-2xl border border-[var(--line)] bg-[color-mix(in_oklab,var(--surface)_76%,white)] p-4">
-								<p className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--sea-ink-soft)]">
-									Fields
-								</p>
-								<p className="mt-2 text-lg font-semibold text-[var(--sea-ink)]">
-									Name, age, class
-								</p>
-							</div>
-							<div className="rounded-2xl border border-[var(--line)] bg-[color-mix(in_oklab,var(--surface)_76%,white)] p-4">
-								<p className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--sea-ink-soft)]">
-									Submission
-								</p>
-								<p className="mt-2 text-lg font-semibold text-[var(--sea-ink)]">
-									Server function
-								</p>
+								<p className="font-semibold">Instant Registry</p>
+								<p className="text-sm text-muted-foreground">Profile becomes available immediately after submission.</p>
 							</div>
 						</div>
 					</div>
-				</section>
+				</div>
 
-				<section>
-					<form
-						onSubmit={handleSubmit(onSubmit)}
-						className="overflow-hidden rounded-[1.75rem]"
-					>
-						<Card className="island-shell overflow-hidden rounded-[1.75rem] border-[var(--line)] bg-[var(--surface-strong)] p-0">
-							<CardHeader className="border-b border-[var(--line)] px-6 pb-5 pt-6 sm:px-8">
-								<div className="flex items-start justify-between gap-4">
-									<div>
-										<p className="island-kicker">New entry</p>
-										<CardTitle className="mt-2 text-2xl font-bold tracking-tight text-[var(--sea-ink)]">
-											Student details
-										</CardTitle>
-									</div>
-									<div className="inline-flex items-center gap-2 rounded-full border border-[var(--chip-line)] bg-[var(--chip-bg)] px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-[var(--kicker)]">
-										<ShieldCheck className="size-4" />
-										Secure
-									</div>
-								</div>
-								<CardDescription className="mt-3 max-w-lg text-sm leading-7 text-[var(--sea-ink-soft)]">
-									Keep the form short and focused. The new card layout keeps the
-									fields easy to scan and the action easy to find.
-								</CardDescription>
+				<div>
+					<Card className="rounded-3xl border-border shadow-2xl shadow-accent/5 overflow-hidden">
+						<form onSubmit={handleSubmit(onSubmit)}>
+							<CardHeader className="bg-muted/30 px-8 py-8 border-b border-border">
+								<CardTitle className="text-2xl">New Student Profile</CardTitle>
+								<CardDescription>Enter the personal details of the student.</CardDescription>
 							</CardHeader>
 
-							<CardContent className="space-y-5 px-6 py-6 sm:px-8">
+							<CardContent className="p-8 space-y-6">
 								<div className="space-y-2">
-									<Label className="text-[10px] font-bold uppercase tracking-[0.24em] text-[var(--kicker)]">
-										Student name
+									<Label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+										Full Name
 									</Label>
 									<Input
 										type="text"
-										placeholder="Full name"
-										autoComplete="name"
-										{...register("name", {
-											required: "Please enter a name.",
-										})}
-										className="h-12 rounded-xl border border-[var(--line)] bg-white/80 px-4 text-[var(--sea-ink)] shadow-[inset_0_1px_0_rgba(255,255,255,0.85)] placeholder:text-[var(--sea-ink-soft)]/60 focus-visible:border-[var(--lagoon-deep)] focus-visible:ring-2 focus-visible:ring-[var(--lagoon)]/30"
+										placeholder="e.g. Jean Dupont"
+										{...register("name", { required: "Name is required" })}
+										className="h-12 rounded-xl border-border bg-background px-4 focus:ring-accent/20"
 									/>
-									{errors.name && (
-										<span className="text-sm text-red-600">
-											{errors.name.message}
-										</span>
-									)}
+									{errors.name && <p className="text-xs text-destructive mt-1">{errors.name.message}</p>}
 								</div>
 
-								<div className="grid gap-4 sm:grid-cols-2">
+								<div className="grid gap-6 sm:grid-cols-2">
 									<div className="space-y-2">
-										<Label className="text-[10px] font-bold uppercase tracking-[0.24em] text-[var(--kicker)]">
+										<Label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
 											Age
 										</Label>
 										<Input
 											type="number"
 											placeholder="18"
-											inputMode="numeric"
-											{...register("age", {
-												valueAsNumber: true,
-												required: "Please enter an age.",
+											{...register("age", { 
+												valueAsNumber: true, 
+												required: "Age is required" 
 											})}
-											className="h-12 rounded-xl border border-[var(--line)] bg-white/80 px-4 text-[var(--sea-ink)] shadow-[inset_0_1px_0_rgba(255,255,255,0.85)] placeholder:text-[var(--sea-ink-soft)]/60 focus-visible:border-[var(--lagoon-deep)] focus-visible:ring-2 focus-visible:ring-[var(--lagoon)]/30"
+											className="h-12 rounded-xl border-border bg-background px-4 focus:ring-accent/20"
 										/>
-										{errors.age && (
-											<span className="text-sm text-red-600">
-												{errors.age.message}
-											</span>
-										)}
+										{errors.age && <p className="text-xs text-destructive mt-1">{errors.age.message}</p>}
 									</div>
 									<div className="space-y-2">
-										<Label className="text-[10px] font-bold uppercase tracking-[0.24em] text-[var(--kicker)]">
-											Class
+										<Label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+											Class Level
 										</Label>
 										<Input
 											type="text"
-											placeholder="Grade A"
-											autoComplete="off"
-											{...register("classe", {
-												required: "Please enter a class.",
-											})}
-											className="h-12 rounded-xl border border-[var(--line)] bg-white/80 px-4 text-[var(--sea-ink)] shadow-[inset_0_1px_0_rgba(255,255,255,0.85)] placeholder:text-[var(--sea-ink-soft)]/60 focus-visible:border-[var(--lagoon-deep)] focus-visible:ring-2 focus-visible:ring-[var(--lagoon)]/30"
+											placeholder="e.g. Master 1"
+											{...register("classe", { required: "Class is required" })}
+											className="h-12 rounded-xl border-border bg-background px-4 focus:ring-accent/20"
 										/>
-										{errors.classe && (
-											<span className="text-sm text-red-600">
-												{errors.classe.message}
-											</span>
-										)}
+										{errors.classe && <p className="text-xs text-destructive mt-1">{errors.classe.message}</p>}
 									</div>
 								</div>
 							</CardContent>
 
-							<CardFooter className="border-t border-(--line) px-6 pb-6 pt-6 sm:px-8">
+							<CardFooter className="p-8 pt-0">
 								<Button
 									disabled={isPending}
 									type="submit"
-									aria-busy={isPending}
-									className="h-12 w-full rounded-full bg-green-800 px-4 text-sm font-semibold text-white shadow-[0_16px_36px_rgba(23,58,64,0.18)] transition hover:-translate-y-0.5 hover:bg-green-950"
+									className="h-12 w-full rounded-2xl bg-primary text-primary-foreground font-semibold shadow-lg hover:opacity-90"
 								>
 									{isPending ? (
 										<>
-											<Loader2 className="size-4 animate-spin" />
-											Creating...
+											<Loader2 className="mr-2 size-4 animate-spin" />
+											Processing...
 										</>
 									) : (
 										<>
-											Add student
-											<ArrowRight className="size-4" />
+											Register Student
+											<ArrowRight className="ml-2 size-4" />
 										</>
 									)}
 								</Button>
 							</CardFooter>
-						</Card>
-					</form>
-				</section>
+						</form>
+					</Card>
+				</div>
 			</div>
 		</main>
 	);
