@@ -217,7 +217,7 @@ function RouteComponent() {
                 </Link>
               </Button>
               <Button
-                onClick={() => onDeleted(student._id)}
+                onClick={() => onDeleted(id)}
                 variant="outline"
                 className="w-full h-12 rounded-2xl border-border hover:bg-muted/50 text-destructive hover:text-destructive"
               >
