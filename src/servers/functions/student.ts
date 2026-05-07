@@ -1,4 +1,4 @@
-import { schemaId, studentSchema } from "#/lib/zod";
+import { schemaEdit, schemaId, studentSchema } from "#/lib/zod";
 import { createServerFn } from "@tanstack/react-start";
 import { connectDB } from "../db/mongodb";
 import Student from "../models/student.model";
@@ -44,10 +44,15 @@ export const getOneStudent = createServerFn({ method: "GET" })
 //updated
 
 export const updatedStudent = createServerFn({ method: "POST" })
-  .inputValidator(schemaId)
+  .inputValidator(schemaEdit)
   .handler(async ({ data }) => {
     await connectDB();
-    const student = await Student.findByIdAndUpdate(data.id).lean();
+    const { name, age, classe } = data;
+    const student = await Student.findByIdAndUpdate(data.id, {
+      name,
+      age,
+      classe,
+    }).lean();
 
     return {
       success: true,

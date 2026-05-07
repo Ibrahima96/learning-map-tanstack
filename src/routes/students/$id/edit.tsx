@@ -1,4 +1,9 @@
-import { createFileRoute, useLoaderData } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  useLoaderData,
+  useNavigate,
+  useRouter,
+} from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -14,7 +19,9 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { ArrowLeft, ArrowRight, Loader2, ShieldCheck } from "lucide-react";
 import { Link } from "@tanstack/react-router";
-import { getOneStudent } from "#/servers/functions/student";
+import { getOneStudent, updatedStudent } from "#/servers/functions/student";
+import { useServerFn } from "@tanstack/react-start";
+import { toast } from "sonner";
 export const Route = createFileRoute("/students/$id/edit")({
   component: RouteComponent,
   loader: async ({ params }) => {
@@ -39,8 +46,24 @@ function RouteComponent() {
   });
   const [isPending, setIsPending] = useState(false);
   console.log(student);
+  const navigate = useNavigate();
+  const route = useRouter();
   //edit function
-  const onSubmit = () => {};
+  const edit = useServerFn(updatedStudent);
+  const onSubmit = async (data: StudentFormValues) => {
+    setIsPending(true);
+    try {
+      await edit({ data: { id, ...data } });
+      toast.success("sucesse ...");
+      route.invalidate();
+      navigate({ to: "/" });
+      throw new Error("updated failed");
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsPending(true);
+    }
+  };
   return (
     <div className="max-w-6xl mx-auto px-8 pt-8 pb-16">
       <div className="pt-3 pb-8">
