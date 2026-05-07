@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useLoaderData } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -14,20 +14,32 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { ArrowLeft, ArrowRight, Loader2, ShieldCheck } from "lucide-react";
 import { Link } from "@tanstack/react-router";
+import { getOneStudent } from "#/servers/functions/student";
 export const Route = createFileRoute("/students/$id/edit")({
   component: RouteComponent,
+  loader: async ({ params }) => {
+    return getOneStudent({ data: { id: params.id } });
+  },
 });
 
 function RouteComponent() {
   const { id } = Route.useParams();
+  const { student } = Route.useLoaderData();
   const {
     register,
     handleSubmit,
 
     formState: { errors },
-  } = useForm<StudentFormValues>();
+  } = useForm<StudentFormValues>({
+    defaultValues: {
+      name: student.name,
+      age: student.age,
+      classe: student.classe,
+    },
+  });
   const [isPending, setIsPending] = useState(false);
-
+  console.log(student);
+  //edit function
   const onSubmit = () => {};
   return (
     <div className="max-w-6xl mx-auto px-8 pt-8 pb-16">
