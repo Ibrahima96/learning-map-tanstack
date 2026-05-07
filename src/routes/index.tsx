@@ -2,48 +2,56 @@ import CardStudents from "#/components/CardStudents";
 import { Button } from "#/components/ui/button";
 import { getAllStudents } from "#/servers/functions/student";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, Plus, Users } from "lucide-react";
+import { Plus, Users } from "lucide-react";
 
+/**
+ * Route principale (Accueil).
+ * Utilise un loader pour récupérer la liste de tous les étudiants avant le rendu.
+ */
 export const Route = createFileRoute("/")({
 	component: App,
 	loader: async () => await getAllStudents(),
 });
 
 function App() {
+    // Récupération des données chargées par le loader
 	const { students } = Route.useLoaderData() as {
-		students: IStudentCard[];
+		students: any[]; // Remplacer par l'interface appropriée si disponible
 	};
+    
 	const total = students.length;
-	const latestStudent = students[0];
+	const latestStudent = students[0]; // Le plus récent (car trié par createdAt:-1)
 
 	return (
 		<main className="page-wrap py-12 md:py-20">
+            {/* Section Hero / En-tête */}
 			<section className="mb-16 grid items-center gap-12 lg:grid-cols-2">
 				<div className="space-y-6">
 					<div className="inline-flex items-center gap-2 rounded-full bg-accent-soft px-3 py-1 text-xs font-semibold text-accent">
 						<Users className="size-3.5" />
-						Database Status: Active
+						Statut Base de Données : Actif
 					</div>
 
 					<div className="space-y-4">
 						<h1 className="display-title text-5xl font-medium tracking-tight text-foreground md:text-7xl">
-							Student Management <br />
-							<span className="text-accent">Made Simple.</span>
+							Gestion des Étudiants <br />
+							<span className="text-accent">Simplifiée.</span>
 						</h1>
 						<p className="max-w-lg text-lg leading-relaxed text-muted-foreground">
-							A clean and efficient way to manage your student records. 
-							Monitor performance, track attendance, and organize class lists in one place.
+							Une façon propre et efficace de gérer vos dossiers étudiants. 
+							Surveillez les performances et organisez vos listes de classe en un seul endroit.
 						</p>
 					</div>
 
 					<div className="flex flex-wrap gap-4">
+                        {/* Lien vers le formulaire de création */}
 						<Button
 							asChild
 							className="h-12 rounded-full bg-primary px-6 text-sm font-medium text-primary-foreground transition-all hover:opacity-90 shadow-lg"
 						>
 							<Link to="/students/form">
 								<Plus className="mr-2 size-4" />
-								Add New Student
+								Ajouter un Étudiant
 							</Link>
 						</Button>
 						<div className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-foreground">
@@ -54,60 +62,64 @@ function App() {
 									</div>
 								))}
 							</div>
-							<span className="ml-2">{total} records stored</span>
+							<span className="ml-2">{total} dossiers enregistrés</span>
 						</div>
 					</div>
 				</div>
 
+                {/* Section Statistiques Rapides */}
 				<div className="relative">
 					<div className="absolute -inset-4 rounded-[2rem] bg-gradient-to-tr from-accent/10 to-transparent blur-2xl" />
 					<div className="relative grid gap-4 sm:grid-cols-2">
 						<div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-							<p className="text-xs font-bold uppercase tracking-wider text-accent">System Total</p>
+							<p className="text-xs font-bold uppercase tracking-wider text-accent">Total Système</p>
 							<p className="mt-2 text-4xl font-medium text-foreground">{total}</p>
-							<p className="mt-2 text-sm text-muted-foreground">Registered students</p>
+							<p className="mt-2 text-sm text-muted-foreground">Étudiants inscrits</p>
 						</div>
 						<div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-							<p className="text-xs font-bold uppercase tracking-wider text-accent">Latest Entry</p>
+							<p className="text-xs font-bold uppercase tracking-wider text-accent">Dernière Entrée</p>
 							<p className="mt-2 text-xl font-medium text-foreground truncate">
 								{latestStudent?.name ?? "N/A"}
 							</p>
 							<p className="mt-2 text-sm text-muted-foreground">
-								{latestStudent ? `Class ${latestStudent.classe}` : "Waiting for data"}
+								{latestStudent ? `Classe ${latestStudent.classe}` : "En attente de données"}
 							</p>
 						</div>
 					</div>
 				</div>
 			</section>
 
+            {/* Liste des étudiants (Registre) */}
 			<section className="rise-in">
 				<div className="mb-8 flex items-end justify-between gap-4 border-b border-border pb-6">
 					<div>
-						<h2 className="text-2xl font-medium text-foreground">Student Registry</h2>
+						<h2 className="text-2xl font-medium text-foreground">Registre des Étudiants</h2>
 						<p className="mt-1 text-sm text-muted-foreground">
-							Showing all {total} records in the system.
+							Affichage de tous les {total} dossiers du système.
 						</p>
 					</div>
 				</div>
 
 				{students.length ? (
+                    // Grille des cartes étudiants
 					<div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
 						{students.map((student) => (
 							<CardStudents key={student._id} {...student} />
 						))}
 					</div>
 				) : (
+                    // État vide si aucun étudiant n'est trouvé
 					<div className="rounded-3xl border-2 border-dashed border-border p-12 text-center">
 						<div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-muted">
 							<Users className="size-6 text-muted-foreground" />
 						</div>
-						<h3 className="mt-4 text-lg font-medium text-foreground">No students found</h3>
-						<p className="mt-2 text-muted-foreground">Get started by adding your first student record.</p>
+						<h3 className="mt-4 text-lg font-medium text-foreground">Aucun étudiant trouvé</h3>
+						<p className="mt-2 text-muted-foreground">Commencez par ajouter votre premier dossier étudiant.</p>
 						<Button
 							asChild
 							className="mt-6 h-10 rounded-full bg-primary px-5 text-sm font-medium"
 						>
-							<Link to="/students/form">Add Student</Link>
+							<Link to="/students/form">Ajouter un Étudiant</Link>
 						</Button>
 					</div>
 				)}
@@ -115,3 +127,5 @@ function App() {
 		</main>
 	);
 }
+
+export default App;
