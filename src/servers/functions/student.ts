@@ -1,7 +1,8 @@
 import { schemaEdit, schemaId, studentSchema } from "#/lib/zod";
 import { createServerFn } from "@tanstack/react-start";
-import { connectDB } from "../db/mongodb";
+import { getRequest } from "@tanstack/react-start/server";
 import Student from "../models/student.model";
+import { getCurrentLinkedUser } from "./current-user";
 
 /**
  * Fonction serveur pour créer un nouvel étudiant.
@@ -10,11 +11,15 @@ import Student from "../models/student.model";
 export const createStudentFn = createServerFn({ method: "POST" })
   .inputValidator(studentSchema)
   .handler(async ({ data }) => {
-    // Connexion à la base de données MongoDB
-    await connectDB();
+    const request = getRequest();
+    const user = await getCurrentLinkedUser(request.headers);
+    if (!user) throw new Error("Vous devez être connecté pour effectuer cette action.");
 
-    // Création de l'étudiant dans la base de données
-    const student = await Student.create(data);
+    // Création de l'étudiant lié au profil local de l'utilisateur connecté
+    const student = await Student.create({
+      ...data,
+      userId: user._id
+    });
     
     return {
       success: true,
@@ -28,13 +33,14 @@ export const createStudentFn = createServerFn({ method: "POST" })
  */
 export const getAllStudents = createServerFn({ method: "GET" }).handler(
   async () => {
-    await connectDB();
-    
-    // Récupération de tous les documents, conversion en objet simple avec lean()
-    const students = await Student.find().sort({ createdAt: -1 }).lean();
+    const request = getRequest();
+    const user = await getCurrentLinkedUser(request.headers);
+    if (!user) return { students: [] };
+
+    // On ne récupère que les étudiants appartenant au profil local connecté
+    const students = await Student.find({ userId: user._id }).sort({ createdAt: -1 }).lean();
 
     return {
-      // JSON.parse/stringify nécessaire pour sérialiser les types MongoDB (comme ObjectId) en JSON pur
       students: JSON.parse(JSON.stringify(students)),
     };
   },
@@ -46,10 +52,12 @@ export const getAllStudents = createServerFn({ method: "GET" }).handler(
 export const getOneStudent = createServerFn({ method: "GET" })
   .inputValidator(schemaId)
   .handler(async ({ data }) => {
-    await connectDB();
+    const request = getRequest();
+    const user = await getCurrentLinkedUser(request.headers);
+    if (!user) throw new Error("Non autorisé");
     
-    // Recherche par ID
-    const student = await Student.findById(data.id).lean();
+    // Recherche par ID et par userId pour garantir la propriété
+    const student = await Student.findOne({ _id: data.id, userId: user._id }).populate("userId").lean();
 
     return {
       student: JSON.parse(JSON.stringify(student)),
@@ -62,15 +70,17 @@ export const getOneStudent = createServerFn({ method: "GET" })
 export const updatedStudent = createServerFn({ method: "POST" })
   .inputValidator(schemaEdit)
   .handler(async ({ data }) => {
-    await connectDB();
+    const request = getRequest();
+    const user = await getCurrentLinkedUser(request.headers);
+    if (!user) throw new Error("Non autorisé");
     const { name, age, classe } = data;
     
-    // Mise à jour via l'ID avec les nouvelles données
-    const student = await Student.findByIdAndUpdate(data.id, {
-      name,
-      age,
-      classe,
-    }, { new: true }).lean(); // new: true pour retourner le document mis à jour
+    // Mise à jour uniquement si l'étudiant appartient à l'utilisateur
+    const student = await Student.findOneAndUpdate(
+      { _id: data.id, userId: user._id }, 
+      { name, age, classe }, 
+      { new: true }
+    ).lean();
 
     return {
       success: true,
@@ -84,10 +94,12 @@ export const updatedStudent = createServerFn({ method: "POST" })
 export const deletedStudentFn = createServerFn({ method: "POST" })
   .inputValidator(schemaId)
   .handler(async ({ data }) => {
-    await connectDB();
+    const request = getRequest();
+    const user = await getCurrentLinkedUser(request.headers);
+    if (!user) throw new Error("Non autorisé");
     
-    // Suppression par ID
-    const student = await Student.findByIdAndDelete(data.id).lean();
+    // Suppression uniquement si l'étudiant appartient à l'utilisateur
+    const student = await Student.findOneAndDelete({ _id: data.id, userId: user._id }).lean();
 
     return {
       success: true,

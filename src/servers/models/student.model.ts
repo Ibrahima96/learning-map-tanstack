@@ -28,6 +28,12 @@ const studentSchema = new Schema(
 			minlength: [1, "La classe est obligatoire."],
 			maxlength: [50, "La classe ne peut pas dépasser 50 caractères."],
 		},
+		userId: {
+			type: Schema.Types.ObjectId,
+			ref: "User",
+			required: [true, "L'identifiant de l'utilisateur est obligatoire."],
+			index: true,
+		},
 	},
 	{
 		// Ajoute automatiquement les champs 'createdAt' et 'updatedAt'

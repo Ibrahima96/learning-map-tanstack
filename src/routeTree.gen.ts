@@ -9,6 +9,8 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as RegisterRouteImport } from './routes/register'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as StudentsFormRouteImport } from './routes/students/form'
@@ -16,7 +18,18 @@ import { Route as DemoTanstackQueryRouteImport } from './routes/demo/tanstack-qu
 import { Route as DemoStoreRouteImport } from './routes/demo/store'
 import { Route as StudentsIdEditRouteImport } from './routes/students/$id/edit'
 import { Route as StudentsIdDetailsRouteImport } from './routes/students/$id/details'
+import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
+const RegisterRoute = RegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
@@ -52,22 +65,33 @@ const StudentsIdDetailsRoute = StudentsIdDetailsRouteImport.update({
   path: '/students/$id/details',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
+  id: '/api/auth/$',
+  path: '/api/auth/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
   '/demo/store': typeof DemoStoreRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
   '/students/form': typeof StudentsFormRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
   '/students/$id/details': typeof StudentsIdDetailsRoute
   '/students/$id/edit': typeof StudentsIdEditRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
   '/demo/store': typeof DemoStoreRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
   '/students/form': typeof StudentsFormRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
   '/students/$id/details': typeof StudentsIdDetailsRoute
   '/students/$id/edit': typeof StudentsIdEditRoute
 }
@@ -75,9 +99,12 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
   '/demo/store': typeof DemoStoreRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
   '/students/form': typeof StudentsFormRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
   '/students/$id/details': typeof StudentsIdDetailsRoute
   '/students/$id/edit': typeof StudentsIdEditRoute
 }
@@ -86,27 +113,36 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/login'
+    | '/register'
     | '/demo/store'
     | '/demo/tanstack-query'
     | '/students/form'
+    | '/api/auth/$'
     | '/students/$id/details'
     | '/students/$id/edit'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
+    | '/login'
+    | '/register'
     | '/demo/store'
     | '/demo/tanstack-query'
     | '/students/form'
+    | '/api/auth/$'
     | '/students/$id/details'
     | '/students/$id/edit'
   id:
     | '__root__'
     | '/'
     | '/about'
+    | '/login'
+    | '/register'
     | '/demo/store'
     | '/demo/tanstack-query'
     | '/students/form'
+    | '/api/auth/$'
     | '/students/$id/details'
     | '/students/$id/edit'
   fileRoutesById: FileRoutesById
@@ -114,15 +150,32 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  LoginRoute: typeof LoginRoute
+  RegisterRoute: typeof RegisterRoute
   DemoStoreRoute: typeof DemoStoreRoute
   DemoTanstackQueryRoute: typeof DemoTanstackQueryRoute
   StudentsFormRoute: typeof StudentsFormRoute
+  ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   StudentsIdDetailsRoute: typeof StudentsIdDetailsRoute
   StudentsIdEditRoute: typeof StudentsIdEditRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/register': {
+      id: '/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof RegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/about': {
       id: '/about'
       path: '/about'
@@ -172,15 +225,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StudentsIdDetailsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/auth/$': {
+      id: '/api/auth/$'
+      path: '/api/auth/$'
+      fullPath: '/api/auth/$'
+      preLoaderRoute: typeof ApiAuthSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  LoginRoute: LoginRoute,
+  RegisterRoute: RegisterRoute,
   DemoStoreRoute: DemoStoreRoute,
   DemoTanstackQueryRoute: DemoTanstackQueryRoute,
   StudentsFormRoute: StudentsFormRoute,
+  ApiAuthSplatRoute: ApiAuthSplatRoute,
   StudentsIdDetailsRoute: StudentsIdDetailsRoute,
   StudentsIdEditRoute: StudentsIdEditRoute,
 }
